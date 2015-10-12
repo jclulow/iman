@@ -16,22 +16,25 @@ function usage
 base="http://illumos.org/man"
 url="$base"
 useopen="false"
+lookup=""
 
 while getopts ":s:o" c "$@"; do
 	case "$c" in
-	s)	url="$base/$OPTARG" ;;
+	s)	lookup="$OPTARG/" ;;
 	o)	useopen="true" ;;
 	:)      usage "option requires an argument -- $OPTARG"  ;;
 	*)      usage "invalid option -- $OPTARG"  ;;
 	esac
 done
 
-shift $(( $OPTIND - 1))
+shift $(( $OPTIND - 1 ))
 [[ -n "$1" ]] || usage
-echo "$url/$1"
+
+lookup="$lookup$1"
+echo "$url/$lookup"
 
 if [[ $useopen != "true" ]]; then
-	curl -s "$url/__raw/$1" | ${PAGER:-more}
+	curl -s "$url/__raw/$lookup" | ${PAGER:-more}
 else
-	open "$url/$1"
+	open "$url/$lookup"
 fi
